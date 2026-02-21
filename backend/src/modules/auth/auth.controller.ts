@@ -62,17 +62,17 @@ export const authController = {
   }),
 
   getMe: asyncHandler(async (req: Request, res: Response) => {
-    const user = await authService.getMe(req.user?.id);
+    const user = await authService.getMe(req.user!.id);
     sendSuccess(res, user);
   }),
 
   updateProfile: asyncHandler(async (req: Request, res: Response) => {
-    const user = await authService.updateProfile(req.user?.id, req.body);
+    const user = await authService.updateProfile(req.user!.id, req.body);
     sendSuccess(res, user);
   }),
 
   changePassword: asyncHandler(async (req: Request, res: Response) => {
-    await authService.changePassword(req.user?.id, req.body);
+    await authService.changePassword(req.user!.id, req.body);
     clearRefreshCookie(res);
     sendSuccess(res, { message: "Password changed. Please log in again." });
   }),
