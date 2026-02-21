@@ -15,4 +15,5 @@ export type {
   LessonProgress,
 } from "./enrollment.types";
 export type { Lesson } from "./lesson.types";
+export type { Notification, NotificationType } from "./notification.types";
 export type { AuthResponse, User } from "./user.types";
