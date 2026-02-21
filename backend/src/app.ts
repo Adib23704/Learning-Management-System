@@ -9,7 +9,13 @@ import { logger } from "./config/logger.js";
 import { errorHandler } from "./middleware/errorHandler.js";
 import { notFound } from "./middleware/notFound.js";
 import { requestId } from "./middleware/requestId.js";
+import analyticsRoutes from "./modules/analytics/analytics.routes.js";
 import authRoutes from "./modules/auth/auth.routes.js";
+import categoryRoutes from "./modules/category/category.routes.js";
+import courseRoutes from "./modules/course/course.routes.js";
+import enrollmentRoutes from "./modules/enrollment/enrollment.routes.js";
+import lessonRoutes from "./modules/lesson/lesson.routes.js";
+import notificationRoutes from "./modules/notification/notification.routes.js";
 import userRoutes from "./modules/user/user.routes.js";
 
 const app = express();
@@ -51,6 +57,12 @@ app.get("/health", (_req, res) => {
 
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/users", userRoutes);
+app.use("/api/v1/categories", categoryRoutes);
+app.use("/api/v1/courses", courseRoutes);
+app.use("/api/v1/courses/:courseId/lessons", lessonRoutes);
+app.use("/api/v1/enrollments", enrollmentRoutes);
+app.use("/api/v1/analytics", analyticsRoutes);
+app.use("/api/v1/notifications", notificationRoutes);
 
 app.use(notFound);
 app.use(errorHandler);
