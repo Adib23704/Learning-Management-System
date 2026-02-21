@@ -21,9 +21,10 @@ export function Sidebar() {
 
   return (
     <>
-      {/* Mobile overlay */}
       {sidebarOpen && (
-        <div
+        <button
+          type="button"
+          aria-label="Close sidebar"
           className="fixed inset-0 z-40 bg-black/30 lg:hidden"
           onClick={() => dispatch(setSidebarOpen(false))}
         />

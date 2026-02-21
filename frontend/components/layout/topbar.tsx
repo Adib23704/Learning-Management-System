@@ -3,6 +3,7 @@
 import { LogOut, Menu } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { NotificationBell } from "@/components/shared/notification-bell";
 import { useAppDispatch } from "@/hooks/use-app-dispatch";
 import { useCurrentUser } from "@/hooks/use-current-user";
 import { ROLE_LABELS } from "@/lib/constants/roles";
@@ -38,7 +39,9 @@ export function Topbar() {
 
       <div className="hidden lg:block" />
 
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-3">
+        <NotificationBell />
+
         {user && (
           <div className="hidden text-right sm:block">
             <p className="text-sm font-medium text-neutral-800">
