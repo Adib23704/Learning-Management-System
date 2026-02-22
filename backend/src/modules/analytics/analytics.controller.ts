@@ -32,12 +32,12 @@ export const analyticsController = {
   }),
 
   getInstructorOverview: asyncHandler(async (req: Request, res: Response) => {
-    const data = await analyticsService.getInstructorOverview(req.user!.id);
+    const data = await analyticsService.getInstructorOverview(req.user?.id);
     sendSuccess(res, data);
   }),
 
   getInstructorRevenue: asyncHandler(async (req: Request, res: Response) => {
-    const data = await analyticsService.getInstructorRevenue(req.user!.id);
+    const data = await analyticsService.getInstructorRevenue(req.user?.id);
     sendSuccess(res, data);
   }),
 };

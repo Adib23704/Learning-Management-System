@@ -6,7 +6,7 @@ import { enrollmentService } from "./enrollment.service.js";
 export const enrollmentController = {
   getMyEnrollments: asyncHandler(async (req: Request, res: Response) => {
     const result = await enrollmentService.getMyEnrollments(
-      req.user!.id,
+      req.user?.id,
       req.query as never,
     );
     sendPaginated(res, result.data, result.meta);
@@ -14,7 +14,7 @@ export const enrollmentController = {
 
   getEnrollmentDetail: asyncHandler(async (req: Request, res: Response) => {
     const enrollment = await enrollmentService.getEnrollmentDetail(
-      req.user!.id,
+      req.user?.id,
       req.params.courseId as string,
     );
     sendSuccess(res, enrollment);
@@ -22,7 +22,7 @@ export const enrollmentController = {
 
   enroll: asyncHandler(async (req: Request, res: Response) => {
     const enrollment = await enrollmentService.enroll(
-      req.user!.id,
+      req.user?.id,
       req.params.courseId as string,
     );
     sendSuccess(res, enrollment, 201);
@@ -30,7 +30,7 @@ export const enrollmentController = {
 
   drop: asyncHandler(async (req: Request, res: Response) => {
     const enrollment = await enrollmentService.drop(
-      req.user!.id,
+      req.user?.id,
       req.params.courseId as string,
     );
     sendSuccess(res, enrollment);
@@ -38,7 +38,7 @@ export const enrollmentController = {
 
   markLessonComplete: asyncHandler(async (req: Request, res: Response) => {
     const result = await enrollmentService.markLessonComplete(
-      req.user!.id,
+      req.user?.id,
       req.params.courseId as string,
       req.params.lessonId as string,
     );
@@ -47,7 +47,7 @@ export const enrollmentController = {
 
   getProgress: asyncHandler(async (req: Request, res: Response) => {
     const result = await enrollmentService.getProgress(
-      req.user!.id,
+      req.user?.id,
       req.params.courseId as string,
     );
     sendSuccess(res, result);

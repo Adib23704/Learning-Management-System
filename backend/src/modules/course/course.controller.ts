@@ -20,7 +20,7 @@ export const courseController = {
   }),
 
   create: asyncHandler(async (req: Request, res: Response) => {
-    const course = await courseService.create(req.body, req.user!.id);
+    const course = await courseService.create(req.body, req.user?.id);
     sendSuccess(res, course, 201);
   }),
 
@@ -28,8 +28,8 @@ export const courseController = {
     const course = await courseService.update(
       req.params.id as string,
       req.body,
-      req.user!.id,
-      req.user!.role,
+      req.user?.id,
+      req.user?.role,
     );
     sendSuccess(res, course);
   }),
@@ -37,8 +37,8 @@ export const courseController = {
   delete: asyncHandler(async (req: Request, res: Response) => {
     await courseService.delete(
       req.params.id as string,
-      req.user!.id,
-      req.user!.role,
+      req.user?.id,
+      req.user?.role,
     );
     sendSuccess(res, { message: "Course deleted" });
   }),
@@ -47,8 +47,8 @@ export const courseController = {
     const course = await courseService.updateStatus(
       req.params.id as string,
       req.body.status,
-      req.user!.id,
-      req.user!.role,
+      req.user?.id,
+      req.user?.role,
     );
     sendSuccess(res, course);
   }),
@@ -57,8 +57,8 @@ export const courseController = {
     const course = await courseService.uploadThumbnail(
       req.params.id as string,
       req.file!,
-      req.user!.id,
-      req.user!.role,
+      req.user?.id,
+      req.user?.role,
     );
     sendSuccess(res, course);
   }),
@@ -66,8 +66,8 @@ export const courseController = {
   getEnrolledStudents: asyncHandler(async (req: Request, res: Response) => {
     const result = await courseService.getEnrolledStudents(
       req.params.id as string,
-      req.user!.id,
-      req.user!.role,
+      req.user?.id,
+      req.user?.role,
       req.query.cursor as string | undefined,
     );
     sendPaginated(res, result.data, result.meta);

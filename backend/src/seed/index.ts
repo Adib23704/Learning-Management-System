@@ -23,7 +23,7 @@ async function main() {
 
   await prisma.user.create({
     data: {
-      email: "superadmin@learnhub.dev",
+      email: "superadmin@lms.dev",
       password: hashedPw,
       firstName: "Super",
       lastName: "Admin",
@@ -33,7 +33,7 @@ async function main() {
 
   await prisma.user.create({
     data: {
-      email: "admin@learnhub.dev",
+      email: "admin@lms.dev",
       password: hashedPw,
       firstName: "Admin",
       lastName: "User",
@@ -43,7 +43,7 @@ async function main() {
 
   const instructor1 = await prisma.user.create({
     data: {
-      email: "john.instructor@learnhub.dev",
+      email: "john.instructor@lms.dev",
       password: hashedPw,
       firstName: "John",
       lastName: "Mitchell",
@@ -53,7 +53,7 @@ async function main() {
 
   const instructor2 = await prisma.user.create({
     data: {
-      email: "sarah.instructor@learnhub.dev",
+      email: "sarah.instructor@lms.dev",
       password: hashedPw,
       firstName: "Sarah",
       lastName: "Chen",
@@ -419,10 +419,10 @@ async function main() {
 
   console.log("Seed complete!");
   console.log("\nTest Credentials (all passwords: password123):");
-  console.log("  Super Admin: superadmin@learnhub.dev");
-  console.log("  Admin:       admin@learnhub.dev");
-  console.log("  Instructor:  john.instructor@learnhub.dev");
-  console.log("  Instructor:  sarah.instructor@learnhub.dev");
+  console.log("  Super Admin: superadmin@lms.dev");
+  console.log("  Admin:       admin@lms.dev");
+  console.log("  Instructor:  john.instructor@lms.dev");
+  console.log("  Instructor:  sarah.instructor@lms.dev");
   console.log("  Student:     alice@example.com");
   console.log("  Student:     bob@example.com");
 }
