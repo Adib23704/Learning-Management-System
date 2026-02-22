@@ -18,7 +18,7 @@ export const notificationsApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getNotifications: builder.query<
       PaginatedResponse<Notification>,
-      GetNotificationsParams | void
+      GetNotificationsParams | undefined
     >({
       query: (params) => ({
         url: "/notifications",

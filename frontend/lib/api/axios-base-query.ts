@@ -3,12 +3,13 @@ import type { AxiosError, AxiosRequestConfig } from "axios";
 import type { RootState } from "@/store";
 import { apiClient } from "./client";
 
-interface AxiosBaseQueryArgs {
+export interface AxiosBaseQueryArgs {
   url: string;
   method?: AxiosRequestConfig["method"];
   data?: AxiosRequestConfig["data"];
   params?: AxiosRequestConfig["params"];
   headers?: AxiosRequestConfig["headers"];
+  rawResult?: boolean;
 }
 
 export function axiosBaseQuery(): BaseQueryFn<
@@ -16,7 +17,10 @@ export function axiosBaseQuery(): BaseQueryFn<
   unknown,
   unknown
 > {
-  return async ({ url, method = "GET", data, params, headers }, api) => {
+  return async (
+    { url, method = "GET", data, params, headers, rawResult },
+    api,
+  ) => {
     try {
       const state = api.getState() as RootState;
       const token = state.auth.accessToken;
@@ -31,6 +35,10 @@ export function axiosBaseQuery(): BaseQueryFn<
           ...(token ? { Authorization: `Bearer ${token}` } : {}),
         },
       });
+
+      if (rawResult) {
+        return { data: result.data };
+      }
 
       return { data: result.data.data ?? result.data };
     } catch (err) {

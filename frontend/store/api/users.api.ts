@@ -30,7 +30,10 @@ interface UpdateUserBody {
 
 export const usersApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
-    getUsers: builder.query<PaginatedResponse<User>, GetUsersParams | void>({
+    getUsers: builder.query<
+      PaginatedResponse<User>,
+      GetUsersParams | undefined
+    >({
       query: (params) => ({
         url: "/users",
         method: "GET",
