@@ -31,6 +31,7 @@ export function Topbar() {
   return (
     <header className="flex h-16 items-center justify-between border-b border-neutral-200 bg-white px-4 lg:px-6">
       <button
+        type="button"
         className="text-neutral-500 hover:text-neutral-700 lg:hidden"
         onClick={() => dispatch(toggleSidebar())}
       >
@@ -57,6 +58,7 @@ export function Topbar() {
         </div>
 
         <button
+          type="button"
           onClick={handleLogout}
           className="rounded-md p-2 text-neutral-400 transition-colors hover:bg-neutral-100 hover:text-neutral-600"
           title="Sign out"

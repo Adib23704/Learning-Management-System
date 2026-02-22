@@ -41,6 +41,7 @@ export function Sidebar() {
             LMS
           </Link>
           <button
+            type="button"
             className="text-neutral-400 hover:text-neutral-600 lg:hidden"
             onClick={() => dispatch(setSidebarOpen(false))}
           >

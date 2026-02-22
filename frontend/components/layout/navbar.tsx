@@ -71,6 +71,7 @@ export function Navbar() {
                 {user.lastName[0]}
               </div>
               <button
+                type="button"
                 onClick={handleLogout}
                 className="rounded-md p-2 text-neutral-400 transition-colors hover:bg-neutral-100 hover:text-neutral-600"
                 title="Sign out"
@@ -91,6 +92,7 @@ export function Navbar() {
         </div>
 
         <button
+          type="button"
           className="rounded-md p-2 text-neutral-500 hover:text-neutral-700 md:hidden"
           onClick={() => setMobileOpen(!mobileOpen)}
         >
@@ -125,6 +127,7 @@ export function Navbar() {
                   Dashboard
                 </Link>
                 <button
+                  type="button"
                   onClick={() => {
                     setMobileOpen(false);
                     handleLogout();

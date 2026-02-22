@@ -24,7 +24,7 @@ export const enrollmentsApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getMyEnrollments: builder.query<
       Enrollment[],
-      GetMyEnrollmentsParams | undefined
+      GetMyEnrollmentsParams | void
     >({
       query: (params) => ({
         url: "/enrollments/me",

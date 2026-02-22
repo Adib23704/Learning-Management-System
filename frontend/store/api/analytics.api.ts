@@ -18,10 +18,7 @@ export const analyticsApi = apiSlice.injectEndpoints({
       providesTags: [{ type: "Analytics", id: "OVERVIEW" }],
     }),
 
-    getEnrollmentGrowth: builder.query<
-      EnrollmentGrowthItem[],
-      number | undefined
-    >({
+    getEnrollmentGrowth: builder.query<EnrollmentGrowthItem[], number | void>({
       query: (days) => ({
         url: "/analytics/enrollment-growth",
         method: "GET",

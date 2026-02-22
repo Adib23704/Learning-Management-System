@@ -27,10 +27,7 @@ interface GetCourseStudentsParams {
 
 export const coursesApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
-    getCourses: builder.query<
-      PaginatedResponse<Course>,
-      CourseFilters | undefined
-    >({
+    getCourses: builder.query<PaginatedResponse<Course>, CourseFilters | void>({
       query: (params) => ({
         url: "/courses",
         method: "GET",

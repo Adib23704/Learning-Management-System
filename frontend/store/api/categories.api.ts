@@ -21,7 +21,7 @@ export const categoriesApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getCategories: builder.query<
       PaginatedResponse<Category>,
-      GetCategoriesParams | undefined
+      GetCategoriesParams | void
     >({
       query: (params) => ({
         url: "/categories",
