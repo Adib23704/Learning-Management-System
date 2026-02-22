@@ -1,5 +1,6 @@
 import type { Request, Response } from "express";
 import { asyncHandler } from "../../common/utils/asyncHandler.js";
+import { requireUserRole } from "../../common/utils/requireUser.js";
 import { sendPaginated, sendSuccess } from "../../common/utils/response.js";
 import { userService } from "./user.service.js";
 
@@ -15,7 +16,7 @@ export const userController = {
   }),
 
   create: asyncHandler(async (req: Request, res: Response) => {
-    const user = await userService.create(req.body, req.user?.role);
+    const user = await userService.create(req.body, requireUserRole(req));
     sendSuccess(res, user, 201);
   }),
 
@@ -23,7 +24,7 @@ export const userController = {
     const user = await userService.update(
       req.params.id as string,
       req.body,
-      req.user?.role,
+      requireUserRole(req),
     );
     sendSuccess(res, user);
   }),
@@ -31,7 +32,7 @@ export const userController = {
   suspend: asyncHandler(async (req: Request, res: Response) => {
     const user = await userService.suspend(
       req.params.id as string,
-      req.user?.role,
+      requireUserRole(req),
     );
     sendSuccess(res, user);
   }),
@@ -39,7 +40,7 @@ export const userController = {
   activate: asyncHandler(async (req: Request, res: Response) => {
     const user = await userService.activate(
       req.params.id as string,
-      req.user?.role,
+      requireUserRole(req),
     );
     sendSuccess(res, user);
   }),

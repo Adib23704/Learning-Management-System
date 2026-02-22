@@ -1,5 +1,10 @@
 import type { Request, Response } from "express";
+import { BadRequestError } from "../../common/errors/index.js";
 import { asyncHandler } from "../../common/utils/asyncHandler.js";
+import {
+  requireUserId,
+  requireUserRole,
+} from "../../common/utils/requireUser.js";
 import { sendPaginated, sendSuccess } from "../../common/utils/response.js";
 import { courseService } from "./course.service.js";
 
@@ -20,7 +25,7 @@ export const courseController = {
   }),
 
   create: asyncHandler(async (req: Request, res: Response) => {
-    const course = await courseService.create(req.body, req.user?.id);
+    const course = await courseService.create(req.body, requireUserId(req));
     sendSuccess(res, course, 201);
   }),
 
@@ -28,8 +33,8 @@ export const courseController = {
     const course = await courseService.update(
       req.params.id as string,
       req.body,
-      req.user?.id,
-      req.user?.role,
+      requireUserId(req),
+      requireUserRole(req),
     );
     sendSuccess(res, course);
   }),
@@ -37,8 +42,8 @@ export const courseController = {
   delete: asyncHandler(async (req: Request, res: Response) => {
     await courseService.delete(
       req.params.id as string,
-      req.user?.id,
-      req.user?.role,
+      requireUserId(req),
+      requireUserRole(req),
     );
     sendSuccess(res, { message: "Course deleted" });
   }),
@@ -47,18 +52,19 @@ export const courseController = {
     const course = await courseService.updateStatus(
       req.params.id as string,
       req.body.status,
-      req.user?.id,
-      req.user?.role,
+      requireUserId(req),
+      requireUserRole(req),
     );
     sendSuccess(res, course);
   }),
 
   uploadThumbnail: asyncHandler(async (req: Request, res: Response) => {
+    if (!req.file) throw new BadRequestError("No file provided");
     const course = await courseService.uploadThumbnail(
       req.params.id as string,
-      req.file!,
-      req.user?.id,
-      req.user?.role,
+      req.file,
+      requireUserId(req),
+      requireUserRole(req),
     );
     sendSuccess(res, course);
   }),
@@ -66,8 +72,8 @@ export const courseController = {
   getEnrolledStudents: asyncHandler(async (req: Request, res: Response) => {
     const result = await courseService.getEnrolledStudents(
       req.params.id as string,
-      req.user?.id,
-      req.user?.role,
+      requireUserId(req),
+      requireUserRole(req),
       req.query.cursor as string | undefined,
     );
     sendPaginated(res, result.data, result.meta);

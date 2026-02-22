@@ -1,5 +1,9 @@
 import type { Request, Response } from "express";
 import { asyncHandler } from "../../common/utils/asyncHandler.js";
+import {
+  requireUserId,
+  requireUserRole,
+} from "../../common/utils/requireUser.js";
 import { sendSuccess } from "../../common/utils/response.js";
 import { lessonService } from "./lesson.service.js";
 
@@ -20,8 +24,8 @@ export const lessonController = {
     const lesson = await lessonService.create(
       req.params.courseId as string,
       req.body,
-      req.user?.id,
-      req.user?.role,
+      requireUserId(req),
+      requireUserRole(req),
     );
     sendSuccess(res, lesson, 201);
   }),
@@ -30,8 +34,8 @@ export const lessonController = {
     const lesson = await lessonService.update(
       req.params.lessonId as string,
       req.body,
-      req.user?.id,
-      req.user?.role,
+      requireUserId(req),
+      requireUserRole(req),
     );
     sendSuccess(res, lesson);
   }),
@@ -39,8 +43,8 @@ export const lessonController = {
   delete: asyncHandler(async (req: Request, res: Response) => {
     await lessonService.delete(
       req.params.lessonId as string,
-      req.user?.id,
-      req.user?.role,
+      requireUserId(req),
+      requireUserRole(req),
     );
     sendSuccess(res, { message: "Lesson deleted" });
   }),
@@ -49,8 +53,8 @@ export const lessonController = {
     await lessonService.reorder(
       req.params.courseId as string,
       req.body.lessons,
-      req.user?.id,
-      req.user?.role,
+      requireUserId(req),
+      requireUserRole(req),
     );
     sendSuccess(res, { message: "Lessons reordered" });
   }),

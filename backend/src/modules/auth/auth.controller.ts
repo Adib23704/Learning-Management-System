@@ -1,6 +1,7 @@
 import type { CookieOptions, Request, Response } from "express";
 import { UnauthorizedError } from "../../common/errors/index.js";
 import { asyncHandler } from "../../common/utils/asyncHandler.js";
+import { requireUserId } from "../../common/utils/requireUser.js";
 import { sendSuccess } from "../../common/utils/response.js";
 import { config } from "../../config/index.js";
 import { authService } from "./auth.service.js";
@@ -62,17 +63,17 @@ export const authController = {
   }),
 
   getMe: asyncHandler(async (req: Request, res: Response) => {
-    const user = await authService.getMe(req.user?.id);
+    const user = await authService.getMe(requireUserId(req));
     sendSuccess(res, user);
   }),
 
   updateProfile: asyncHandler(async (req: Request, res: Response) => {
-    const user = await authService.updateProfile(req.user?.id, req.body);
+    const user = await authService.updateProfile(requireUserId(req), req.body);
     sendSuccess(res, user);
   }),
 
   changePassword: asyncHandler(async (req: Request, res: Response) => {
-    await authService.changePassword(req.user?.id, req.body);
+    await authService.changePassword(requireUserId(req), req.body);
     clearRefreshCookie(res);
     sendSuccess(res, { message: "Password changed. Please log in again." });
   }),

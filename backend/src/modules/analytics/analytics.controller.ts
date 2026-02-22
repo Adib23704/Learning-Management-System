@@ -1,5 +1,6 @@
 import type { Request, Response } from "express";
 import { asyncHandler } from "../../common/utils/asyncHandler.js";
+import { requireUserId } from "../../common/utils/requireUser.js";
 import { sendSuccess } from "../../common/utils/response.js";
 import { analyticsService } from "./analytics.service.js";
 
@@ -32,12 +33,16 @@ export const analyticsController = {
   }),
 
   getInstructorOverview: asyncHandler(async (req: Request, res: Response) => {
-    const data = await analyticsService.getInstructorOverview(req.user?.id);
+    const data = await analyticsService.getInstructorOverview(
+      requireUserId(req),
+    );
     sendSuccess(res, data);
   }),
 
   getInstructorRevenue: asyncHandler(async (req: Request, res: Response) => {
-    const data = await analyticsService.getInstructorRevenue(req.user?.id);
+    const data = await analyticsService.getInstructorRevenue(
+      requireUserId(req),
+    );
     sendSuccess(res, data);
   }),
 };

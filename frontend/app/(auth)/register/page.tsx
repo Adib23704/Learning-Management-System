@@ -16,9 +16,7 @@ export default function RegisterPage() {
     <Card>
       <CardHeader className="text-center">
         <CardTitle className="text-2xl">Create your account</CardTitle>
-        <CardDescription>
-          Join LMS as a student or instructor
-        </CardDescription>
+        <CardDescription>Join LMS as a student or instructor</CardDescription>
       </CardHeader>
       <CardContent>
         <RegisterForm />

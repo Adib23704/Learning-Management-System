@@ -58,6 +58,16 @@ const mockUserWithPassword = {
   password: "hashed-password",
 };
 
+const mockRefreshToken = {
+  id: "rt-mock",
+  token: "hashed-mock",
+  userId: "user-1",
+  expiresAt: new Date(Date.now() + 86400000),
+  createdAt: new Date(),
+};
+
+const mockBatchPayload = { count: 1 };
+
 describe("authService", () => {
   beforeEach(() => {
     vi.clearAllMocks();
@@ -67,7 +77,9 @@ describe("authService", () => {
     it("should create a new user and return tokens", async () => {
       vi.mocked(authRepository.findByEmail).mockResolvedValue(null);
       vi.mocked(authRepository.createUser).mockResolvedValue(mockUser);
-      vi.mocked(authRepository.createRefreshToken).mockResolvedValue({} as any);
+      vi.mocked(authRepository.createRefreshToken).mockResolvedValue(
+        mockRefreshToken,
+      );
 
       const result = await authService.register({
         email: "test@example.com",
@@ -110,10 +122,12 @@ describe("authService", () => {
       );
       vi.mocked(bcrypt.compare).mockResolvedValue(true as never);
       vi.mocked(authRepository.deleteExpiredTokens).mockResolvedValue(
-        {} as any,
+        mockBatchPayload,
       );
       vi.mocked(authRepository.countUserTokens).mockResolvedValue(0);
-      vi.mocked(authRepository.createRefreshToken).mockResolvedValue({} as any);
+      vi.mocked(authRepository.createRefreshToken).mockResolvedValue(
+        mockRefreshToken,
+      );
 
       const result = await authService.login({
         email: "test@example.com",
@@ -172,13 +186,15 @@ describe("authService", () => {
       );
       vi.mocked(bcrypt.compare).mockResolvedValue(true as never);
       vi.mocked(authRepository.deleteExpiredTokens).mockResolvedValue(
-        {} as any,
+        mockBatchPayload,
       );
       vi.mocked(authRepository.countUserTokens).mockResolvedValue(5);
       vi.mocked(authRepository.deleteAllUserTokens).mockResolvedValue(
-        {} as any,
+        mockBatchPayload,
       );
-      vi.mocked(authRepository.createRefreshToken).mockResolvedValue({} as any);
+      vi.mocked(authRepository.createRefreshToken).mockResolvedValue(
+        mockRefreshToken,
+      );
 
       await authService.login({
         email: "test@example.com",
@@ -199,8 +215,12 @@ describe("authService", () => {
         createdAt: new Date(),
         user: mockUser,
       });
-      vi.mocked(authRepository.deleteRefreshToken).mockResolvedValue({} as any);
-      vi.mocked(authRepository.createRefreshToken).mockResolvedValue({} as any);
+      vi.mocked(authRepository.deleteRefreshToken).mockResolvedValue(
+        mockBatchPayload,
+      );
+      vi.mocked(authRepository.createRefreshToken).mockResolvedValue(
+        mockRefreshToken,
+      );
 
       const result = await authService.refresh("old-refresh-token");
 
@@ -229,7 +249,9 @@ describe("authService", () => {
         createdAt: new Date(),
         user: mockUser,
       });
-      vi.mocked(authRepository.deleteRefreshToken).mockResolvedValue({} as any);
+      vi.mocked(authRepository.deleteRefreshToken).mockResolvedValue(
+        mockBatchPayload,
+      );
 
       await expect(
         authService.refresh("expired-refresh-token"),
@@ -239,7 +261,9 @@ describe("authService", () => {
 
   describe("logout", () => {
     it("should delete the refresh token", async () => {
-      vi.mocked(authRepository.deleteRefreshToken).mockResolvedValue({} as any);
+      vi.mocked(authRepository.deleteRefreshToken).mockResolvedValue(
+        mockBatchPayload,
+      );
 
       await authService.logout("some-token");
 
@@ -255,9 +279,11 @@ describe("authService", () => {
         "hashed-password",
       );
       vi.mocked(bcrypt.compare).mockResolvedValue(true as never);
-      vi.mocked(authRepository.updatePassword).mockResolvedValue({} as any);
+      vi.mocked(authRepository.updatePassword).mockResolvedValue(
+        mockUserWithPassword,
+      );
       vi.mocked(authRepository.deleteAllUserTokens).mockResolvedValue(
-        {} as any,
+        mockBatchPayload,
       );
 
       await authService.changePassword("user-1", {
