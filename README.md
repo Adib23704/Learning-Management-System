@@ -1,4 +1,4 @@
-# LMS - Technical Assessment
+# Full-stack Learning Management System (LMS)
 
 Full-stack Learning Management System covering all four roles from the spec (Super Admin, Admin, Instructor, Student) plus the bonus features: Socket.io real-time notifications, email simulation with Ethereal, and unit tests for the auth service.
 
