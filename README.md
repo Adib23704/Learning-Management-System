@@ -39,6 +39,8 @@ CLOUDINARY_API_SECRET=
 
 The `SMTP_*` variables can be left empty for local dev. Ethereal generates them automatically on first use and prints a preview URL to the backend console whenever an email would be sent.
 
+`COOKIE_DOMAIN` is only needed when the frontend and backend are deployed on different subdomains (e.g. frontend on Vercel, API on Render). Set it to the shared parent domain with a leading dot — for example `COOKIE_DOMAIN=.adibdev.me` — so the `refresh_token` cookie is accessible to both. Leave it unset for local development.
+
 ---
 
 ## Test accounts

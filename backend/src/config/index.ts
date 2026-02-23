@@ -18,6 +18,7 @@ const envSchema = z.object({
   SMTP_USER: z.string().optional().default(""),
   SMTP_PASS: z.string().optional().default(""),
   EMAIL_FROM: z.string().min(1),
+  COOKIE_DOMAIN: z.string().optional(),
 });
 
 const parsed = envSchema.safeParse(process.env);

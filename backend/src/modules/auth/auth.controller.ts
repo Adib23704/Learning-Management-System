@@ -14,6 +14,7 @@ const cookieOptions: CookieOptions = {
   sameSite: config.NODE_ENV === "production" ? "strict" : "lax",
   path: "/",
   maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+  ...(config.COOKIE_DOMAIN && { domain: config.COOKIE_DOMAIN }),
 };
 
 function setRefreshCookie(res: Response, token: string) {
