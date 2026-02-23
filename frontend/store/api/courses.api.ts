@@ -54,6 +54,15 @@ export const coursesApi = apiSlice.injectEndpoints({
       providesTags: (_result, _error, id) => [{ type: "Course", id }],
     }),
 
+    getCourseBySlug: builder.query<Course, string>({
+      query: (slug) => ({
+        url: `/courses/slug/${slug}`,
+        method: "GET",
+      }),
+      providesTags: (result) =>
+        result ? [{ type: "Course", id: result.id }] : [],
+    }),
+
     createCourse: builder.mutation<Course, FormData | CreateCourseBody>({
       query: (body) => ({
         url: "/courses",
@@ -147,6 +156,7 @@ export const coursesApi = apiSlice.injectEndpoints({
 export const {
   useGetCoursesQuery,
   useGetCourseQuery,
+  useGetCourseBySlugQuery,
   useCreateCourseMutation,
   useUpdateCourseMutation,
   useDeleteCourseMutation,

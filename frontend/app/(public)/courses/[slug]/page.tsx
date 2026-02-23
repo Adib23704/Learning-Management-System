@@ -21,7 +21,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useCurrentUser } from "@/hooks/use-current-user";
 import { ROUTES } from "@/lib/constants/routes";
 import { formatCurrency } from "@/lib/utils/format";
-import { useGetCourseQuery } from "@/store/api/courses.api";
+import { useGetCourseBySlugQuery } from "@/store/api/courses.api";
 import { useEnrollMutation } from "@/store/api/enrollments.api";
 import { useGetLessonsQuery } from "@/store/api/lessons.api";
 import type { Lesson } from "@/types";
@@ -35,7 +35,7 @@ export default function CourseDetailPage({
   const router = useRouter();
   const { user, isAuthenticated } = useCurrentUser();
 
-  const { data: course, isLoading } = useGetCourseQuery(slug);
+  const { data: course, isLoading } = useGetCourseBySlugQuery(slug);
 
   const { data: lessonsRaw } = useGetLessonsQuery(course?.id ?? "", {
     skip: !course?.id,
