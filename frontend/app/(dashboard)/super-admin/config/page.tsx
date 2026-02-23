@@ -101,7 +101,9 @@ export default function SuperAdminConfigPage() {
             },
             {
               label: "API Base URL",
-              value: process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000/api/v1",
+              value:
+                process.env.NEXT_PUBLIC_API_URL ??
+                "http://localhost:8000/api/v1",
               description: "Backend API endpoint",
             },
           ]}

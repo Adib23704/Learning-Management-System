@@ -1,11 +1,11 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Plus, Search, ShieldAlert, ShieldCheck } from "lucide-react";
 import { useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { FormField } from "@/components/forms/form-field";
 import { ConfirmDialog } from "@/components/shared/confirm-dialog";
 import { type Column, DataTable } from "@/components/shared/data-table";
@@ -294,14 +294,18 @@ export default function SuperAdminAdminsPage() {
         open={confirmDialog.open}
         onOpenChange={(open) => setConfirmDialog((prev) => ({ ...prev, open }))}
         title={
-          confirmDialog.action === "suspend" ? "Suspend Admin" : "Activate Admin"
+          confirmDialog.action === "suspend"
+            ? "Suspend Admin"
+            : "Activate Admin"
         }
         description={
           confirmDialog.action === "suspend"
             ? `Are you sure you want to suspend ${confirmDialog.userName}? They will lose admin access.`
             : `Are you sure you want to activate ${confirmDialog.userName}? They will regain admin access.`
         }
-        confirmText={confirmDialog.action === "suspend" ? "Suspend" : "Activate"}
+        confirmText={
+          confirmDialog.action === "suspend" ? "Suspend" : "Activate"
+        }
         variant={confirmDialog.action === "suspend" ? "danger" : "default"}
         onConfirm={handleToggleStatus}
         isLoading={isSuspending || isActivating}
