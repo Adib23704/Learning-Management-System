@@ -71,7 +71,7 @@ export const emailService = {
         </p>
         <p style="color: #525252; font-size: 15px; line-height: 1.6;">
           Congratulations on completing <strong>${courseTitle}</strong>!
-          Keep up the great work — check out more courses to continue your learning journey.
+          Keep up the great work - check out more courses to continue your learning journey.
         </p>
         <a href="${process.env.FRONTEND_URL || "http://localhost:3000"}/courses"
            style="display: inline-block; background: #2d6a4f; color: white; padding: 10px 24px; border-radius: 6px; text-decoration: none; font-size: 14px; font-weight: 500; margin-top: 12px;">

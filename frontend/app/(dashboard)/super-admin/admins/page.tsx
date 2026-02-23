@@ -1,10 +1,11 @@
 "use client";
 
-import { zodResolver } from "@hookform/resolvers/zod";
 import { Plus, Search, ShieldAlert, ShieldCheck } from "lucide-react";
 import { useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { FormField } from "@/components/forms/form-field";
 import { ConfirmDialog } from "@/components/shared/confirm-dialog";
 import { type Column, DataTable } from "@/components/shared/data-table";
@@ -19,19 +20,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { ROLE_LABELS, type UserRole } from "@/lib/constants/roles";
 import { formatDate } from "@/lib/utils/format";
-import {
-  type CreateUserInput,
-  createUserSchema,
-} from "@/lib/validators/user.schema";
 import {
   useActivateUserMutation,
   useCreateUserMutation,
@@ -40,26 +29,17 @@ import {
 } from "@/store/api/users.api";
 import type { User } from "@/types";
 
-const ROLE_FILTER_OPTIONS = [
-  { value: "ALL", label: "All Roles" },
-  { value: "STUDENT", label: "Student" },
-  { value: "INSTRUCTOR", label: "Instructor" },
-  { value: "ADMIN", label: "Admin" },
-] as const;
+const createAdminSchema = z.object({
+  email: z.string().email("Please enter a valid email"),
+  password: z.string().min(8, "Password must be at least 8 characters"),
+  firstName: z.string().min(1, "First name is required").max(50),
+  lastName: z.string().min(1, "Last name is required").max(50),
+});
 
-const ROLE_BADGE_VARIANT: Record<
-  string,
-  "default" | "success" | "info" | "warning"
-> = {
-  STUDENT: "default",
-  INSTRUCTOR: "info",
-  ADMIN: "warning",
-  SUPER_ADMIN: "success",
-};
+type CreateAdminInput = z.infer<typeof createAdminSchema>;
 
-export default function AdminUsersPage() {
+export default function SuperAdminAdminsPage() {
   const [search, setSearch] = useState("");
-  const [roleFilter, setRoleFilter] = useState("ALL");
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
   const [confirmDialog, setConfirmDialog] = useState<{
     open: boolean;
@@ -69,35 +49,29 @@ export default function AdminUsersPage() {
   }>({ open: false, userId: "", action: "suspend", userName: "" });
 
   const { data: usersData, isLoading } = useGetUsersQuery({
+    role: "ADMIN",
     search: search || undefined,
-    role: roleFilter !== "ALL" ? (roleFilter as UserRole) : undefined,
   });
 
   const [createUser, { isLoading: isCreating }] = useCreateUserMutation();
   const [suspendUser, { isLoading: isSuspending }] = useSuspendUserMutation();
   const [activateUser, { isLoading: isActivating }] = useActivateUserMutation();
 
-  const users = usersData?.data ?? [];
+  const admins = usersData?.data ?? [];
 
-  const form = useForm<CreateUserInput>({
-    resolver: zodResolver(createUserSchema),
-    defaultValues: {
-      firstName: "",
-      lastName: "",
-      email: "",
-      password: "",
-      role: "STUDENT",
-    },
+  const form = useForm<CreateAdminInput>({
+    resolver: zodResolver(createAdminSchema),
+    defaultValues: { firstName: "", lastName: "", email: "", password: "" },
   });
 
-  const handleCreateUser = async (values: CreateUserInput) => {
+  const handleCreate = async (values: CreateAdminInput) => {
     try {
-      await createUser(values).unwrap();
-      toast.success("User created successfully");
+      await createUser({ ...values, role: "ADMIN" }).unwrap();
+      toast.success("Admin created successfully");
       setCreateDialogOpen(false);
       form.reset();
     } catch {
-      toast.error("Failed to create user");
+      toast.error("Failed to create admin");
     }
   };
 
@@ -105,14 +79,14 @@ export default function AdminUsersPage() {
     try {
       if (confirmDialog.action === "suspend") {
         await suspendUser(confirmDialog.userId).unwrap();
-        toast.success("User suspended successfully");
+        toast.success("Admin suspended successfully");
       } else {
         await activateUser(confirmDialog.userId).unwrap();
-        toast.success("User activated successfully");
+        toast.success("Admin activated successfully");
       }
       setConfirmDialog((prev) => ({ ...prev, open: false }));
     } catch {
-      toast.error(`Failed to ${confirmDialog.action} user`);
+      toast.error(`Failed to ${confirmDialog.action} admin`);
     }
   };
 
@@ -124,9 +98,9 @@ export default function AdminUsersPage() {
         render: (item) => {
           const u = item as unknown as User;
           return (
-            <div className="font-medium text-neutral-800">
+            <p className="font-medium text-neutral-800">
               {u.firstName} {u.lastName}
-            </div>
+            </p>
           );
         },
       },
@@ -136,18 +110,6 @@ export default function AdminUsersPage() {
         render: (item) => {
           const u = item as unknown as User;
           return <span className="text-neutral-600">{u.email}</span>;
-        },
-      },
-      {
-        key: "role",
-        header: "Role",
-        render: (item) => {
-          const u = item as unknown as User;
-          return (
-            <Badge variant={ROLE_BADGE_VARIANT[u.role] ?? "default"} size="sm">
-              {ROLE_LABELS[u.role] ?? u.role}
-            </Badge>
-          );
         },
       },
       {
@@ -178,13 +140,14 @@ export default function AdminUsersPage() {
         className: "text-right",
         render: (item) => {
           const u = item as unknown as User;
-          if (u.role === "SUPER_ADMIN" || u.role === "ADMIN") return null;
           return (
             <div className="flex items-center justify-end gap-1">
               {u.isActive ? (
                 <Button
+                  type="button"
                   variant="ghost"
                   size="sm"
+                  title="Suspend admin"
                   onClick={(e) => {
                     e.stopPropagation();
                     setConfirmDialog({
@@ -199,8 +162,10 @@ export default function AdminUsersPage() {
                 </Button>
               ) : (
                 <Button
+                  type="button"
                   variant="ghost"
                   size="sm"
+                  title="Activate admin"
                   onClick={(e) => {
                     e.stopPropagation();
                     setConfirmDialog({
@@ -225,54 +190,40 @@ export default function AdminUsersPage() {
   return (
     <div className="space-y-6">
       <PageHeader
-        title="User Management"
-        description="Manage all platform users"
+        title="Admins"
+        description="Manage platform administrators"
         actions={
           <Button onClick={() => setCreateDialogOpen(true)}>
             <Plus className="h-4 w-4" />
-            Create User
+            Add Admin
           </Button>
         }
       />
 
-      <div className="flex flex-col gap-3 sm:flex-row">
-        <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-neutral-400" />
-          <Input
-            placeholder="Search by name or email..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="pl-9"
-          />
-        </div>
-        <Select value={roleFilter} onValueChange={setRoleFilter}>
-          <SelectTrigger className="w-full sm:w-44">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            {ROLE_FILTER_OPTIONS.map((opt) => (
-              <SelectItem key={opt.value} value={opt.value}>
-                {opt.label}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+      <div className="relative max-w-sm">
+        <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-neutral-400" />
+        <Input
+          placeholder="Search admins..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          className="pl-9"
+        />
       </div>
 
       <DataTable
         columns={columns}
-        data={users as unknown as Record<string, unknown>[]}
+        data={admins as unknown as Record<string, unknown>[]}
         isLoading={isLoading}
-        emptyMessage="No users found."
+        emptyMessage="No admins found."
       />
 
       <Dialog open={createDialogOpen} onOpenChange={setCreateDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Create New User</DialogTitle>
+            <DialogTitle>Add New Admin</DialogTitle>
           </DialogHeader>
           <form
-            onSubmit={form.handleSubmit(handleCreateUser)}
+            onSubmit={form.handleSubmit(handleCreate)}
             className="space-y-4"
           >
             <div className="grid gap-4 sm:grid-cols-2">
@@ -307,7 +258,7 @@ export default function AdminUsersPage() {
               <Input
                 type="email"
                 {...form.register("email")}
-                placeholder="john@example.com"
+                placeholder="admin@example.com"
                 error={!!form.formState.errors.email}
               />
             </FormField>
@@ -323,27 +274,6 @@ export default function AdminUsersPage() {
                 error={!!form.formState.errors.password}
               />
             </FormField>
-            <FormField
-              label="Role"
-              required
-              error={form.formState.errors.role?.message}
-            >
-              <Select
-                value={form.watch("role")}
-                onValueChange={(val) =>
-                  form.setValue("role", val as CreateUserInput["role"])
-                }
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select a role" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="STUDENT">Student</SelectItem>
-                  <SelectItem value="INSTRUCTOR">Instructor</SelectItem>
-                  <SelectItem value="ADMIN">Admin</SelectItem>
-                </SelectContent>
-              </Select>
-            </FormField>
             <DialogFooter>
               <Button
                 type="button"
@@ -353,7 +283,7 @@ export default function AdminUsersPage() {
                 Cancel
               </Button>
               <Button type="submit" isLoading={isCreating}>
-                Create User
+                Create Admin
               </Button>
             </DialogFooter>
           </form>
@@ -364,16 +294,14 @@ export default function AdminUsersPage() {
         open={confirmDialog.open}
         onOpenChange={(open) => setConfirmDialog((prev) => ({ ...prev, open }))}
         title={
-          confirmDialog.action === "suspend" ? "Suspend User" : "Activate User"
+          confirmDialog.action === "suspend" ? "Suspend Admin" : "Activate Admin"
         }
         description={
           confirmDialog.action === "suspend"
-            ? `Are you sure you want to suspend ${confirmDialog.userName}? They will lose access to the platform.`
-            : `Are you sure you want to activate ${confirmDialog.userName}? They will regain access to the platform.`
+            ? `Are you sure you want to suspend ${confirmDialog.userName}? They will lose admin access.`
+            : `Are you sure you want to activate ${confirmDialog.userName}? They will regain admin access.`
         }
-        confirmText={
-          confirmDialog.action === "suspend" ? "Suspend" : "Activate"
-        }
+        confirmText={confirmDialog.action === "suspend" ? "Suspend" : "Activate"}
         variant={confirmDialog.action === "suspend" ? "danger" : "default"}
         onConfirm={handleToggleStatus}
         isLoading={isSuspending || isActivating}

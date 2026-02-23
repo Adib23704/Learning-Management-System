@@ -18,7 +18,7 @@ const NAV_LINKS = [{ label: "Courses", href: "/courses" }] as const;
 export function Navbar() {
   const router = useRouter();
   const dispatch = useAppDispatch();
-  const { user, isAuthenticated } = useCurrentUser();
+  const { user, isAuthenticated, isHydrating } = useCurrentUser();
   const [logout] = useLogoutMutation();
   const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -58,7 +58,12 @@ export function Navbar() {
         </div>
 
         <div className="hidden items-center gap-3 md:flex">
-          {isAuthenticated && user ? (
+          {isHydrating ? (
+            <div className="flex items-center gap-3">
+              <div className="h-4 w-20 animate-pulse rounded bg-neutral-200" />
+              <div className="h-8 w-8 animate-pulse rounded-full bg-neutral-200" />
+            </div>
+          ) : isAuthenticated && user ? (
             <>
               <Link
                 href={dashboardHref}
@@ -117,7 +122,7 @@ export function Navbar() {
                 {link.label}
               </Link>
             ))}
-            {isAuthenticated && user ? (
+            {isHydrating ? null : isAuthenticated && user ? (
               <>
                 <Link
                   href={dashboardHref}

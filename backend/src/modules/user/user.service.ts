@@ -79,6 +79,9 @@ export const userService = {
     const user = await userRepository.findById(id);
     if (!user) throw new NotFoundError("User");
 
+    if (user.role === "SUPER_ADMIN") {
+      throw new ForbiddenError("Cannot modify Super Admin accounts");
+    }
     if (user.role === "ADMIN" && actorRole !== "SUPER_ADMIN") {
       throw new ForbiddenError("Only Super Admin can activate admins");
     }
