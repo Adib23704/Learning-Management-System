@@ -11,7 +11,7 @@ import {
   updateCourseDto,
 } from "./course.dto.js";
 
-const router = Router();
+const router: Router = Router();
 
 router.get("/", validate({ query: courseQueryDto }), courseController.list);
 router.get("/slug/:slug", courseController.getBySlug);

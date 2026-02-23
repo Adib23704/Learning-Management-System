@@ -9,7 +9,7 @@ import {
   updateLessonDto,
 } from "./lesson.dto.js";
 
-const router = Router({ mergeParams: true });
+const router: Router = Router({ mergeParams: true });
 
 router.get("/", lessonController.listByCourse);
 router.get("/:lessonId", authenticate, lessonController.getById);

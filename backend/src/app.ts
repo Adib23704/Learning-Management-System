@@ -1,6 +1,6 @@
 import cookieParser from "cookie-parser";
 import cors from "cors";
-import express from "express";
+import express, { type Express } from "express";
 import { rateLimit } from "express-rate-limit";
 import helmet from "helmet";
 import { pinoHttp } from "pino-http";
@@ -18,7 +18,7 @@ import lessonRoutes from "./modules/lesson/lesson.routes.js";
 import notificationRoutes from "./modules/notification/notification.routes.js";
 import userRoutes from "./modules/user/user.routes.js";
 
-const app = express();
+const app: Express = express();
 
 app.use(helmet());
 app.use(

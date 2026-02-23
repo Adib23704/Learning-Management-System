@@ -5,7 +5,7 @@ import { validate } from "../../middleware/validate.js";
 import { categoryController } from "./category.controller.js";
 import { createCategoryDto, updateCategoryDto } from "./category.dto.js";
 
-const router = Router();
+const router: Router = Router();
 
 router.get("/", categoryController.list);
 router.get("/:id", categoryController.getById);

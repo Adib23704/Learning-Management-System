@@ -8,7 +8,7 @@ const DASHBOARD_PREFIXES = [
   "/super-admin",
 ];
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const hasRefreshToken = request.cookies.has("refresh_token");
 

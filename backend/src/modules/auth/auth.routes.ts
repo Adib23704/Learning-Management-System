@@ -10,7 +10,7 @@ import {
   updateProfileDto,
 } from "./auth.dto.js";
 
-const router = Router();
+const router: Router = Router();
 
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 min

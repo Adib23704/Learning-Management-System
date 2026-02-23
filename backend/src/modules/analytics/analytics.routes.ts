@@ -3,7 +3,7 @@ import { authenticate } from "../../middleware/authenticate.js";
 import { authorize } from "../../middleware/authorize.js";
 import { analyticsController } from "./analytics.controller.js";
 
-const router = Router();
+const router: Router = Router();
 router.use(authenticate);
 
 router.get(

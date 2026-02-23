@@ -5,7 +5,7 @@ import { validate } from "../../middleware/validate.js";
 import { userController } from "./user.controller.js";
 import { createUserDto, updateUserDto, userQueryDto } from "./user.dto.js";
 
-const router = Router();
+const router: Router = Router();
 
 router.use(authenticate, authorize("SUPER_ADMIN", "ADMIN"));
 

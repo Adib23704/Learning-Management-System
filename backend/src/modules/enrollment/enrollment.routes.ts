@@ -5,7 +5,7 @@ import { validate } from "../../middleware/validate.js";
 import { enrollmentController } from "./enrollment.controller.js";
 import { enrollmentQueryDto } from "./enrollment.dto.js";
 
-const router = Router();
+const router: Router = Router();
 
 router.get(
   "/me",
