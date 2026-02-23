@@ -1,7 +1,11 @@
 import { PrismaClient } from "@prisma/client";
+import { PrismaPg } from "@prisma/adapter-pg";
 import bcrypt from "bcrypt";
+import { config } from "../config";
 
-const prisma = new PrismaClient();
+const prisma = new PrismaClient({
+  adapter: new PrismaPg({ connectionString: config.DATABASE_URL }),
+});
 
 const SALT_ROUNDS = 12;
 
