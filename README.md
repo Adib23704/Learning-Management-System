@@ -4,6 +4,8 @@ Full-stack Learning Management System covering all four roles from the spec (Sup
 
 **Stack:** Next.js 16 · Express 5 · PostgreSQL · Prisma · Redux Toolkit + RTK Query · Socket.io · Tailwind CSS v4 · TypeScript throughout · pnpm monorepo
 
+### **Live:** [lms.adibdev.me](https://lms.adibdev.me) · API: [lms-api.adibdev.me](https://lms-api.adibdev.me)
+
 ---
 
 ## Running locally
